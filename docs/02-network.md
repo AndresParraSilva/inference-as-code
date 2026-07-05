@@ -2,7 +2,9 @@
 
 ## DHCP reservation
 
-The Latitude's MAC address has a DHCP reservation on the router, giving it a stable LAN IP — the local equivalent of an Elastic IP. This is a router-side, non-automatable step done outside this repo.
+The Latitude's MAC address is reserved on the router (mapped to a fixed LAN IP) — the local equivalent of an Elastic IP. This is a router-side, non-automatable step done outside this repo.
+
+Confirmed via the router's admin panel — the box's MAC now has an explicit static-lease entry, so the IP survives reboots and lease renewals rather than just persisting by DHCP-lease coincidence.
 
 ## Firewall — UFW as the Security Group
 
