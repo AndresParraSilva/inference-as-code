@@ -44,10 +44,13 @@ The conventions that govern every change in this repo (stack, script standards, 
 
 ## Reproduce this
 
+See [`docs/scripts.md`](docs/scripts.md) for the general workflow (how scripts run on the box, in what order).
+
 1. Install the OS — see [`docs/01-install.md`](docs/01-install.md).
 2. Base configuration ("AMI hardening") — run [`scripts/01-base-setup.sh`](scripts/01-base-setup.sh).
+3. Network & firewall ("Security Group") — run [`scripts/02-firewall.sh`](scripts/02-firewall.sh); see [`docs/02-network.md`](docs/02-network.md).
 
-More steps land here as each phase completes (firewall, access hardening, inference engine, ...).
+More steps land here as each phase completes (access hardening, inference engine, ...).
 
 ## Related
 
