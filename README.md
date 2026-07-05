@@ -44,7 +44,10 @@ The conventions that govern every change in this repo (stack, script standards, 
 
 ## Reproduce this
 
-Coming soon — will point at `docs/` and `scripts/` once the base install and firewall phases land.
+1. Install the OS — see [`docs/01-install.md`](docs/01-install.md).
+2. Base configuration ("AMI hardening") — run [`scripts/01-base-setup.sh`](scripts/01-base-setup.sh).
+
+More steps land here as each phase completes (firewall, access hardening, inference engine, ...).
 
 ## Related
 
