@@ -1,0 +1,12 @@
+# Local working notes — not part of the public artifact
+iac-plan.md
+prompts.md
+
+# Secrets and key material (constitution §6)
+*.pem
+id_*
+*_ed25519*
+.env
+
+# Local data stays local
+data/
