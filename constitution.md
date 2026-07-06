@@ -19,7 +19,7 @@ A public, reproducible IaC-style record of turning a Dell Latitude 5410 (8GB RAM
 | Agent layer | Python venv: LangGraph, LangChain, CrewAI, `ollama`, DuckDB, `python-chess` | versions pinned in `requirements.txt` |
 | Benchmarks | `bench/benchmark.py` | CSV output in `bench/results/` + Markdown table in README |
 
-The chess agent application lives in a **separate repo** (`chess-agent-lab`); this repo carries only the infrastructure that hosts it. Cross-link, don't merge.
+The chess agent application lives **inside this repo**, in `chess-agent-lab/` (see §3) — kept in-repo rather than split out, so the whole thing reads as one self-contained working example: infra plus a real application running on it.
 
 ## 3. Repo structure
 
@@ -32,7 +32,13 @@ The chess agent application lives in a **separate repo** (`chess-agent-lab`); th
 ├── docs/                # per-phase notes: 01-install, 02-network, 03-access, 04-inference, architecture
 ├── scripts/             # numbered, idempotent, runnable in order: 01-base-setup.sh, 02-firewall.sh, …
 ├── configs/             # systemd units and overrides with placeholder user/paths
-└── bench/               # benchmark.py + results/*.csv
+├── bench/               # benchmark.py + results/*.csv
+└── chess-agent-lab/     # agentic framework layer — application built on top of the lab (Phase 6)
+    ├── agents/
+    ├── data/            # gitignored — Lichess DB, PGNs stay local
+    ├── tests/
+    ├── requirements.txt
+    └── README.md
 ```
 
 - `scripts/` are numbered two-digit (`01-`, `02-`, …) and must be runnable in order on a fresh install.
@@ -64,7 +70,7 @@ This repo is public. **Never commit:**
 
 Remember that git history is public too: a secret in an old commit is still leaked. If a secret ever lands in a commit, stop and tell the user — history rewriting is their call. Before any push that follows sensitive work, run a `gitleaks` pass. The final pre-publication audit is the user's non-delegable responsibility; assistants prepare, the user signs off.
 
-## 7. Python standards (bench/ and any tooling)
+## 7. Python standards (bench/, chess-agent-lab/, and any tooling)
 
 - All dependencies pinned to exact versions in `requirements.txt`.
 - Benchmark outputs are data artifacts: CSVs in `bench/results/` are committed (after sanitization review), and the README results table is regenerated from them, never hand-edited out of sync.

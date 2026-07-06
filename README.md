@@ -39,7 +39,8 @@ The conventions that govern every change in this repo (stack, script standards, 
 ├── docs/           # per-phase notes (install, network, access, inference, architecture)
 ├── scripts/        # numbered, idempotent, runnable in order
 ├── configs/        # systemd units, service overrides
-└── bench/          # benchmark suite + results
+├── bench/          # benchmark suite + results
+└── chess-agent-lab/ # agentic framework layer — a real application built on the lab
 ```
 
 ## Reproduce this
@@ -56,7 +57,8 @@ More steps land here as each phase completes (agentic framework, service persist
 
 ## Related
 
-- Chess analysis agent (LangGraph + local LLMs, built on top of this lab): link TBD
+- Chess analysis agent (LangGraph + local LLMs) — kept in this repo, in `chess-agent-lab/`, as a self-contained working example: infra plus a real application running on it.
+- A separate portfolio repo may follow later for using this box for everyday coding tasks, once that's real usage rather than a plan.
 
 ## License
 
