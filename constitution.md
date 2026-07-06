@@ -16,7 +16,7 @@ A public, reproducible IaC-style record of turning a Dell Latitude 5410 (8GB RAM
 | Service manager | systemd | units/overrides committed under `configs/` |
 | Inference | Ollama | LAN-exposed via `OLLAMA_HOST=0.0.0.0:11434` override |
 | Models | quantized 3B–7B (Qwen 2.5, Llama 3.2) | must fit 8GB RAM; quantization choice documented in `docs/04-inference.md` |
-| Agent layer | Python venv: LangGraph, LangChain, CrewAI, `ollama`, DuckDB, `python-chess` | versions pinned in `requirements.txt` |
+| Agent layer | Python via `uv`: LangGraph, LangChain, CrewAI, `ollama`, DuckDB, `python-chess` | deps in `pyproject.toml`, exact resolved versions locked in `uv.lock` |
 | Benchmarks | `bench/benchmark.py` | CSV output in `bench/results/` + Markdown table in README |
 
 The chess agent application lives **inside this repo**, in `chess-agent-lab/` (see §3) — kept in-repo rather than split out, so the whole thing reads as one self-contained working example: infra plus a real application running on it.
@@ -37,7 +37,8 @@ The chess agent application lives **inside this repo**, in `chess-agent-lab/` (s
     ├── agents/
     ├── data/            # gitignored — Lichess DB, PGNs stay local
     ├── tests/
-    ├── requirements.txt
+    ├── pyproject.toml   # dependency declarations
+    ├── uv.lock          # exact resolved versions — commit alongside pyproject.toml
     └── README.md
 ```
 
@@ -72,7 +73,8 @@ Remember that git history is public too: a secret in an old commit is still leak
 
 ## 7. Python standards (bench/, chess-agent-lab/, and any tooling)
 
-- All dependencies pinned to exact versions in `requirements.txt`.
+- Dependency management via `uv`: dependencies declared in `pyproject.toml`, exact resolved versions locked in `uv.lock` — both files committed, `uv.lock` never hand-edited (regenerate with `uv lock`).
+- Environments created with `uv sync`; run code with `uv run ...` rather than manually activating a venv.
 - Benchmark outputs are data artifacts: CSVs in `bench/results/` are committed (after sanitization review), and the README results table is regenerated from them, never hand-edited out of sync.
 - Fail loudly on unexpected input — no silent defaults or graceful degradation that hides bad data.
 

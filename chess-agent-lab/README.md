@@ -12,15 +12,14 @@ Given a FEN position, the local LLM (via Ollama) explains the position and names
 
 ## Setup
 
-Provisioned on the `iac` box by [`scripts/05-chess-agent-setup.sh`](../scripts/05-chess-agent-setup.sh) — installs `python3-venv` and the `stockfish` engine binary, creates a venv here, and installs `requirements.txt`.
+Provisioned on the `iac` box by [`scripts/05-chess-agent-setup.sh`](../scripts/05-chess-agent-setup.sh) — installs `uv` and the `stockfish` engine binary, then runs `uv sync` here to create the venv from `uv.lock` (dependencies declared in `pyproject.toml`, exact resolved versions locked in `uv.lock` — both committed, both required for a reproducible environment).
 
 ## Run it
 
 ```bash
 cd chess-agent-lab
-source .venv/bin/activate
-python agents/orchestrator.py                      # starting position
-python agents/orchestrator.py "<some other FEN>" --model qwen2.5:3b
+uv run agents/orchestrator.py                      # starting position
+uv run agents/orchestrator.py "<some other FEN>" --model qwen2.5:3b
 ```
 
 Set `OLLAMA_HOST` to point at a remote Ollama instance (default `http://localhost:11434`, i.e. this box's own Ollama).
@@ -28,7 +27,7 @@ Set `OLLAMA_HOST` to point at a remote Ollama instance (default `http://localhos
 ## Tests
 
 ```bash
-python -m unittest discover tests
+uv run python -m unittest discover tests
 ```
 
 `data/` is gitignored — any Lichess DB dumps or PGN files used later stay local, never committed.
