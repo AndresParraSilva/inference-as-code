@@ -10,6 +10,27 @@
 
 **Why 0.0.0.0 is safe here:** the firewall from Phase 3 (`scripts/02-firewall.sh`) already scopes inbound access to `11434/tcp` specifically, on a deny-by-default posture — binding Ollama to all interfaces only matters within that already-restricted LAN surface, not the open internet.
 
+## Gotcha: pulling models before the server was actually ready
+
+The first version of the script did `enable --now ollama` immediately followed by `restart ollama`, then went straight into `ollama pull ...`. That produced:
+```
+Error: could not connect to ollama server, run 'ollama serve' to start it
+```
+
+**Root cause:** `systemctl restart` returns as soon as the process is forked — it doesn't wait for Ollama to actually finish starting up and bind its port. The `restart` right after `enable --now` was also redundant (the override was already written before the first start), and the extra stop/start cycle right before the `pull` commands was exactly what raced them.
+
+**Fix:** a single `restart` (not `enable --now` followed by another `restart`), then a bounded readiness loop that polls the server before running any `pull`, failing loudly if it never comes up rather than racing it:
+```bash
+for _ in $(seq 1 30); do
+  if curl -fsS http://localhost:11434/ > /dev/null 2>&1; then
+    break
+  fi
+  sleep 1
+done
+```
+
+**Lesson:** `systemctl restart`/`enable --now` completing doesn't mean the service is ready to accept connections — a script that immediately depends on the service being up needs its own readiness check, not just a successful `systemctl` exit code.
+
 ## Model selection: what fits in 8GB RAM
 
 | Model | Quantization | Why this one |
