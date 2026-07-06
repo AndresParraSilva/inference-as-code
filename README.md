@@ -10,7 +10,7 @@ The conventions that govern every change in this repo (stack, script standards, 
 
 | AWS EC2 concept | Local equivalent | Phase |
 |---|---|---|
-| Choosing an AMI | Ubuntu Server 24.04 LTS ISO | 1 |
+| Choosing an AMI | Ubuntu Server 26.04 LTS ISO | 1 |
 | Launching the instance | Installing the OS on the Latitude | 1 |
 | Security Group (firewall rules) | UFW rules | 3 |
 | Key Pair (.pem) for SSH | Ed25519 SSH keypair | 4 |

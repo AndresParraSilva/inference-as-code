@@ -27,7 +27,19 @@ Kept inside this repo (see `constitution.md` §2) rather than split into a secon
 
 Switched from a plain `requirements.txt` + `venv` to [`uv`](https://astral.sh/uv) — dependencies are declared in `pyproject.toml`, and `uv lock` resolves the *entire* dependency tree (161 packages, not just the 7 direct ones) into `uv.lock`, which is committed alongside it. That's a stronger reproducibility guarantee than `requirements.txt` ever gave: two machines running `uv sync` against the same `uv.lock` get byte-identical resolved versions, transitive dependencies included.
 
-`requires-python` is pinned to `>=3.12,<3.13` rather than left open — `uv lock` will otherwise happily resolve (and later try to download/manage) a newer interpreter than the system's, and the whole point here is matching what's actually installed on the box (Ubuntu 24.04 ships Python 3.12.3).
+## Gotcha: matching the system Python was the wrong call
+
+The first version of `pyproject.toml` pinned `requires-python` to match whatever Python the box's OS shipped — first assumed `3.12` (from an incorrect assumption the box ran Ubuntu 24.04; it actually runs **Ubuntu 26.04 LTS**, correction applied throughout this repo), then corrected to the box's real system Python, `3.14.4`.
+
+Neither worked. On Python 3.14, `import crewai` crashes outright:
+```
+pydantic.v1.errors.ConfigError: unable to infer type for attribute "chroma_server_nofile"
+```
+**Root cause:** `crewai` pulls in `chromadb`, which still relies on Pydantic's legacy `v1` compatibility shim internally — and that shim is explicitly broken on Python 3.14 (`chromadb` itself prints `UserWarning: Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater`). This is an upstream ecosystem gap, not something fixable from this repo.
+
+**Fix:** stop trying to match the OS's system Python at all. `requires-python` is now `>=3.13,<3.14`, and `uv` manages its *own* Python 3.13 interpreter for this project — completely decoupled from whatever the box's `python3` happens to be. `uv sync` downloads that interpreter itself if it's not already present (as it did here, and will on the box too).
+
+**Lesson:** tying a project's Python version to "whatever the OS ships" is fragile precisely because OS upgrades change that version out from under you. Letting `uv` own the interpreter version is the more idiomatic use of the tool — it's the entire reason project-scoped, uv-managed Pythons exist. Verify actual system facts (`ssh iac 'python3 --version'`) rather than assuming from the OS version number; two assumptions here (24.04 → 3.12, then "match the system") were both wrong before landing on the right one.
 
 Direct dependencies, exact versions captured from PyPI when this phase landed (`pip index versions <pkg>`):
 ```

@@ -14,7 +14,7 @@
    ```bash
    ssh -v iac-operator@192.168.x.x 2>&1 | grep -i "authenticated"
    ```
-   Look for `using "publickey"` (not `"password"`) in the line printed. Note: on Ubuntu 24.04's OpenSSH, this line reads `Authenticated to <host> ([<ip>]:22) using "publickey".` — older OpenSSH versions phrase it as `Authentication succeeded (publickey).`
+   Look for `using "publickey"` (not `"password"`) in the line printed. Note: on Ubuntu 26.04's OpenSSH, this line reads `Authenticated to <host> ([<ip>]:22) using "publickey".` — older OpenSSH versions phrase it as `Authentication succeeded (publickey).`
 4. **Add a `~/.ssh/config` convenience entry** on your main machine, so a plain `ssh iac` always uses the right key regardless of what the server currently allows:
    ```
    Host iac

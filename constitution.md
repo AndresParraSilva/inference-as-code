@@ -4,13 +4,13 @@ Technical authority for this repository. Any AI assistant or contributor working
 
 ## 1. What this repo is
 
-A public, reproducible IaC-style record of turning a Dell Latitude 5410 (8GB RAM, CPU-only) into a headless AI lab server (`latitude-ai`) running Ubuntu Server 24.04 LTS, modeled on the AWS EC2 mental model (see the mapping table in `README.md`). The repo **is** the infrastructure: every script, config, and doc is committed as the work happens, not written up after the fact.
+A public, reproducible IaC-style record of turning a Dell Latitude 5410 (8GB RAM, CPU-only) into a headless AI lab server (`latitude-ai`) running Ubuntu Server 26.04 LTS, modeled on the AWS EC2 mental model (see the mapping table in `README.md`). The repo **is** the infrastructure: every script, config, and doc is committed as the work happens, not written up after the fact.
 
 ## 2. Stack
 
 | Layer | Choice | Notes |
 |---|---|---|
-| OS | Ubuntu Server 24.04 LTS | headless, no GUI — RAM is the scarce resource |
+| OS | Ubuntu Server 26.04 LTS | headless, no GUI — RAM is the scarce resource |
 | Firewall | UFW | deny-by-default incoming, allow outgoing |
 | Access | OpenSSH, Ed25519 keys only | password auth and root login disabled |
 | Service manager | systemd | units/overrides committed under `configs/` |
