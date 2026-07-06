@@ -10,3 +10,8 @@ id_*
 
 # Local data stays local
 data/
+
+# Python
+.venv/
+__pycache__/
+*.pyc

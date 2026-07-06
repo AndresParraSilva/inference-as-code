@@ -31,5 +31,8 @@ Some scripts may pop an interactive `dpkg`/`apt` confirmation dialog (e.g. `unat
 | `02-firewall.sh` | 3 — Network & Security | UFW deny-by-default incoming, allow OpenSSH + Ollama's 11434/tcp, enable on boot |
 | `03-ssh-harden.sh` | 4 — Access Management | Disables password auth and root login via an sshd drop-in, validates config, restarts `ssh` |
 | `04-ollama.sh` | 5 — Inference Engine | Installs Ollama, exposes it on the LAN (`OLLAMA_HOST=0.0.0.0:11434`), pulls starter models |
+| `05-chess-agent-setup.sh` | 6 — Agentic Framework | Installs `python3-venv`/`stockfish`, `git clone`s this repo onto the box, sets up the `chess-agent-lab/` venv from pinned `requirements.txt` |
 
 This table grows as each phase's script is added — see the corresponding `docs/NN-*.md` for the *why* behind each one.
+
+Note: `05-chess-agent-setup.sh` is the first script that isn't self-contained — it depends on `chess-agent-lab/`'s other files, so it `git clone`s the whole repo onto the box rather than being scp'd alone. See `docs/05-agentic-framework.md`.

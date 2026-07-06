@@ -52,8 +52,9 @@ See [`docs/scripts.md`](docs/scripts.md) for the general workflow (how scripts r
 3. Network & firewall ("Security Group") — run [`scripts/02-firewall.sh`](scripts/02-firewall.sh); see [`docs/02-network.md`](docs/02-network.md).
 4. Access management ("IAM + Key Pair") — generate a dedicated Ed25519 key, then run [`scripts/03-ssh-harden.sh`](scripts/03-ssh-harden.sh); see [`docs/03-access.md`](docs/03-access.md).
 5. Inference engine (Ollama) — run [`scripts/04-ollama.sh`](scripts/04-ollama.sh); see [`docs/04-inference.md`](docs/04-inference.md) for model selection and quantization rationale.
+6. Agentic framework layer — run [`scripts/05-chess-agent-setup.sh`](scripts/05-chess-agent-setup.sh); see [`docs/05-agentic-framework.md`](docs/05-agentic-framework.md) and [`chess-agent-lab/`](chess-agent-lab/).
 
-More steps land here as each phase completes (agentic framework, service persistence, ...).
+More steps land here as each phase completes (service persistence, benchmarks, ...).
 
 ## Related
 
