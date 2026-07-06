@@ -86,4 +86,4 @@ uv run python -m unittest discover tests
 
 ## Checkpoint
 
-Pending — run `scripts/05-chess-agent-setup.sh` on the box, then `agents/orchestrator.py`, and confirm the loop produces a sensible explanation/verdict against a real Stockfish evaluation.
+✅ Ran on the box: `uv run agents/orchestrator.py` against the starting position. `llama3.2:3b` explained the position and named `e4` as its suggested move; Stockfish independently confirmed `e4` as its own best move (+39 centipawns). Verdict: match. The full hand-rolled act-observe-reason loop works end to end.
