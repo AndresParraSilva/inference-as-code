@@ -60,3 +60,7 @@ No model beyond 7B is attempted — with the OS, Ollama runtime, and any agent t
    (Or `192.168.x.x` if mDNS resolution isn't working yet.)
 
 Real tokens/sec, time-to-first-token, and peak RAM numbers for each model are measured properly in Phase 8 (`bench/benchmark.py`) — these checkpoints are just a go/no-go gut check before investing further.
+
+## Checkpoint
+
+✅ Go. Not fast, but usable, on CPU-only 8GB hardware. Both the on-box `ollama run` sanity check and the API hit from the main machine (`curl http://iac.local:11434/api/generate ...`) returned correct answers. Informal first impression: `llama3.2:3b` felt the fastest and gave the best answer of the three for a chess-rules prompt — anecdotal for now, formal numbers land in Phase 8.
