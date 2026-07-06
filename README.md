@@ -50,8 +50,9 @@ See [`docs/scripts.md`](docs/scripts.md) for the general workflow (how scripts r
 2. Base configuration ("AMI hardening") — run [`scripts/01-base-setup.sh`](scripts/01-base-setup.sh).
 3. Network & firewall ("Security Group") — run [`scripts/02-firewall.sh`](scripts/02-firewall.sh); see [`docs/02-network.md`](docs/02-network.md).
 4. Access management ("IAM + Key Pair") — generate a dedicated Ed25519 key, then run [`scripts/03-ssh-harden.sh`](scripts/03-ssh-harden.sh); see [`docs/03-access.md`](docs/03-access.md).
+5. Inference engine (Ollama) — run [`scripts/04-ollama.sh`](scripts/04-ollama.sh); see [`docs/04-inference.md`](docs/04-inference.md) for model selection and quantization rationale.
 
-More steps land here as each phase completes (inference engine, agentic framework, ...).
+More steps land here as each phase completes (agentic framework, service persistence, ...).
 
 ## Related
 

@@ -13,6 +13,12 @@ ssh iac 'bash ~/NN-name.sh'
 
 (`iac` is the `~/.ssh/config` alias set up in Phase 4 — see `docs/03-access.md`. Before that existed, this same pattern worked with `iac-operator@192.168.x.x` and a password prompt.)
 
+Any script that calls `sudo` needs a TTY to prompt for a password — the one-liner above doesn't allocate one. Either force one with `ssh -t iac 'bash ~/NN-name.sh'`, or just SSH in and run the script interactively:
+```bash
+ssh iac
+./NN-name.sh
+```
+
 Every script is idempotent, so re-running one that already succeeded is safe and a normal way to pick up an interrupted phase.
 
 Some scripts may pop an interactive `dpkg`/`apt` confirmation dialog (e.g. `unattended-upgrades` reconfiguration) — accept the defaults unless a phase's doc says otherwise.
@@ -24,5 +30,6 @@ Some scripts may pop an interactive `dpkg`/`apt` confirmation dialog (e.g. `unat
 | `01-base-setup.sh` | 2 — Base OS Configuration | `apt update`/`full-upgrade`, installs base toolset (`curl`, `git`, `htop`, `btop`, `tmux`, `vim`, `ufw`, `fail2ban`, `unattended-upgrades`, `avahi-daemon`), enables mDNS, configures unattended upgrades |
 | `02-firewall.sh` | 3 — Network & Security | UFW deny-by-default incoming, allow OpenSSH + Ollama's 11434/tcp, enable on boot |
 | `03-ssh-harden.sh` | 4 — Access Management | Disables password auth and root login via an sshd drop-in, validates config, restarts `ssh` |
+| `04-ollama.sh` | 5 — Inference Engine | Installs Ollama, exposes it on the LAN (`OLLAMA_HOST=0.0.0.0:11434`), pulls starter models |
 
 This table grows as each phase's script is added — see the corresponding `docs/NN-*.md` for the *why* behind each one.
