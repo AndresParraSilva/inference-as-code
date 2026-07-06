@@ -34,6 +34,34 @@
    ```
    The script validates the config with `sshd -t` before restarting, so a typo can't lock you out — `sshd -t` would fail and the restart step wouldn't run.
 
+## Gotcha: cloud-init silently overrides password auth
+
+The first version of `scripts/03-ssh-harden.sh` wrote its drop-in to `/etc/ssh/sshd_config.d/99-iac-harden.conf` and appeared to succeed (`sshd -t` passed, `ssh` restarted cleanly) — but password auth was still accepted afterward.
+
+**Root cause:** since password auth (not an imported SSH identity) was used during install, Ubuntu's `cloud-init` had already written `/etc/ssh/sshd_config.d/50-cloud-init.conf` containing `PasswordAuthentication yes`. `sshd` processes `Include`d files in sorted filename order and applies **first-match-wins** per directive — so `50-cloud-init.conf` won over `99-iac-harden.conf`, silently.
+
+**Fix:** rename the drop-in to `10-iac-harden.conf` (sorts before `50-`), and — more importantly — have the script verify the *effective* config after restarting, not just assume success:
+```bash
+sudo sshd -T | grep -qi '^passwordauthentication no$'
+```
+If that check fails, the script exits non-zero with a clear message instead of reporting a false success. This is why the script re-checks after restart rather than trusting `sshd -t` (which only validates syntax, not which drop-in wins).
+
+**Lesson:** on any Ubuntu box installed with password auth, expect a pre-existing `50-cloud-init.conf` — check `sudo sshd -T | grep -i passwordauthentication` for the *effective* value, never just the contents of the file you wrote.
+
+## Gotcha #2: the verification check itself gave a false negative
+
+After the fix above, the script *still* reported `PasswordAuthentication is still enabled` — but manually running `ssh` with forced password auth confirmed it was actually disabled. The self-check was lying.
+
+**Root cause:** the check was `sudo sshd -T | grep -qi '^passwordauthentication no$'`. `grep -q` exits the instant it finds a match, without reading the rest of its input — which can close the pipe while `sshd -T` is still writing to it. That earns `sshd -T` a `SIGPIPE` and a non-zero exit status, and because the script runs with `set -o pipefail`, that non-zero status propagates through the whole pipeline **even though `grep` itself matched successfully**. Net effect: a check that was actually correct reported failure.
+
+**Fix:** capture `sshd -T`'s output into a variable first, then `grep` that variable — no live pipe for `-q` to prematurely close:
+```bash
+effective_config=$(sudo sshd -T)
+grep -qi '^passwordauthentication no$' <<<"$effective_config"
+```
+
+**Lesson:** `grep -q` piped directly from a live command, under `pipefail`, can produce false negatives purely from its early-exit behavior — independent of whether the thing being checked is actually true. Capture-then-grep avoids it.
+
 ## Why key-only, no root login
 
 Password auth is brute-forceable and root login bypasses the audit trail of "which key connected as which user" — the same reasoning AWS bakes into EC2 by default (no root SSH, key pairs only). Restarting `ssh` doesn't drop already-established sessions (each is a separate forked process), so hardening is safe to apply without losing your current connection — but always keep an existing session open and test a *fresh* connection afterward anyway, as a matter of discipline.
@@ -45,3 +73,5 @@ Password auth is brute-forceable and root login bypasses the audit trail of "whi
 ## Checkpoint
 
 ✅ Passwordless key-based SSH confirmed from the main machine (`ssh iac`), independent of the `~/.ssh/config` entry.
+
+✅ `scripts/03-ssh-harden.sh` run successfully — self-check passes silently. Confirmed with two live tests from a fresh terminal: `ssh iac` connects with no prompt; `ssh -o PubkeyAuthentication=no -o PreferredAuthentications=password iac` is refused.
