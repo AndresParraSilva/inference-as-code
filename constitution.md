@@ -32,7 +32,11 @@ The chess agent application lives **inside this repo**, in `chess-agent-lab/` (s
 ├── docs/                # per-phase notes: 01-install, 02-network, 03-access, 04-inference, architecture
 ├── scripts/             # numbered, idempotent, runnable in order: 01-base-setup.sh, 02-firewall.sh, …
 ├── configs/             # systemd units and overrides with placeholder user/paths
-├── bench/               # benchmark.py + results/*.csv
+├── bench/               # benchmark suite — own uv project (Phase 8)
+│   ├── benchmark.py
+│   ├── results/         # *.csv, committed after each real run
+│   ├── pyproject.toml
+│   └── uv.lock
 └── chess-agent-lab/     # agentic framework layer — application built on top of the lab (Phase 6)
     ├── agents/
     ├── data/            # gitignored — Lichess DB, PGNs stay local

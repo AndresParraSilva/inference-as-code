@@ -54,8 +54,9 @@ See [`docs/scripts.md`](docs/scripts.md) for the general workflow (how scripts r
 5. Inference engine (Ollama) — run [`scripts/04-ollama.sh`](scripts/04-ollama.sh); see [`docs/04-inference.md`](docs/04-inference.md) for model selection and quantization rationale.
 6. Agentic framework layer — run [`scripts/05-chess-agent-setup.sh`](scripts/05-chess-agent-setup.sh); see [`docs/05-agentic-framework.md`](docs/05-agentic-framework.md) and [`chess-agent-lab/`](chess-agent-lab/).
 7. Service persistence — deferred, see [`docs/06-service-persistence.md`](docs/06-service-persistence.md) (no long-running job to persist yet).
+8. Benchmarks — run [`scripts/06-bench-setup.sh`](scripts/06-bench-setup.sh), then `uv run bench/benchmark.py`; see [`docs/07-benchmarks.md`](docs/07-benchmarks.md) for methodology.
 
-More steps land here as each phase completes (benchmarks, ...).
+More steps land here as each phase completes.
 
 ## Related
 

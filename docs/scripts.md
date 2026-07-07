@@ -32,7 +32,8 @@ Some scripts may pop an interactive `dpkg`/`apt` confirmation dialog (e.g. `unat
 | `03-ssh-harden.sh` | 4 — Access Management | Disables password auth and root login via an sshd drop-in, validates config, restarts `ssh` |
 | `04-ollama.sh` | 5 — Inference Engine | Installs Ollama, exposes it on the LAN (`OLLAMA_HOST=0.0.0.0:11434`), pulls starter models |
 | `05-chess-agent-setup.sh` | 6 — Agentic Framework | Installs `stockfish` and `uv`, `git clone`s this repo onto the box, runs `uv sync` in `chess-agent-lab/` to create the venv from `uv.lock` |
+| `06-bench-setup.sh` | 8 — Benchmarks | `git pull`s the repo (already cloned in Phase 6), runs `uv sync` in `bench/` |
 
 This table grows as each phase's script is added — see the corresponding `docs/NN-*.md` for the *why* behind each one.
 
-Note: `05-chess-agent-setup.sh` is the first script that isn't self-contained — it depends on `chess-agent-lab/`'s other files, so it `git clone`s the whole repo onto the box rather than being scp'd alone. See `docs/05-agentic-framework.md`.
+Note: `05-chess-agent-setup.sh` is the first script that isn't self-contained — it depends on `chess-agent-lab/`'s other files, so it `git clone`s the whole repo onto the box rather than being scp'd alone. See `docs/05-agentic-framework.md`. `06-bench-setup.sh` follows the same pattern (`git pull` instead of `clone`, since the repo already exists on the box by this point).

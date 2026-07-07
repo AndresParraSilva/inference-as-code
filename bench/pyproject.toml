@@ -1,0 +1,8 @@
+[project]
+name = "bench"
+version = "0.1.0"
+description = "Benchmark suite for the inference-as-code lab: tokens/sec, TTFT, peak RAM"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "ollama==0.6.2",
+]
