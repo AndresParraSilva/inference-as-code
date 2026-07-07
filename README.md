@@ -53,8 +53,9 @@ See [`docs/scripts.md`](docs/scripts.md) for the general workflow (how scripts r
 4. Access management ("IAM + Key Pair") — generate a dedicated Ed25519 key, then run [`scripts/03-ssh-harden.sh`](scripts/03-ssh-harden.sh); see [`docs/03-access.md`](docs/03-access.md).
 5. Inference engine (Ollama) — run [`scripts/04-ollama.sh`](scripts/04-ollama.sh); see [`docs/04-inference.md`](docs/04-inference.md) for model selection and quantization rationale.
 6. Agentic framework layer — run [`scripts/05-chess-agent-setup.sh`](scripts/05-chess-agent-setup.sh); see [`docs/05-agentic-framework.md`](docs/05-agentic-framework.md) and [`chess-agent-lab/`](chess-agent-lab/).
+7. Service persistence — deferred, see [`docs/06-service-persistence.md`](docs/06-service-persistence.md) (no long-running job to persist yet).
 
-More steps land here as each phase completes (service persistence, benchmarks, ...).
+More steps land here as each phase completes (benchmarks, ...).
 
 ## Related
 
