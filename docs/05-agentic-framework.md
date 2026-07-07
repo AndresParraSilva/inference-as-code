@@ -41,6 +41,22 @@ pydantic.v1.errors.ConfigError: unable to infer type for attribute "chroma_serve
 
 **Lesson:** tying a project's Python version to "whatever the OS ships" is fragile precisely because OS upgrades change that version out from under you. Letting `uv` own the interpreter version is the more idiomatic use of the tool — it's the entire reason project-scoped, uv-managed Pythons exist. Verify actual system facts (`ssh iac 'python3 --version'`) rather than assuming from the OS version number; two assumptions here (24.04 → 3.12, then "match the system") were both wrong before landing on the right one.
 
+## Gotcha: critical, unpatched RCE in a transitive dependency
+
+GitHub's Dependabot flagged a **critical** vulnerability on the pushed `uv.lock`: `chromadb` 1.1.1, pulled in transitively via `crewai` 1.15.1.
+
+**The vulnerability:** an unauthenticated, pre-auth code injection in ChromaDB's `/api/v2/tenants/{tenant}/databases/{db}/collections` endpoint — sending a malicious model repository with `trust_remote_code=true` lets an attacker run arbitrary code on the server. Affects `chromadb` `>=1.0.0`, up to and including the current latest release, `1.5.9` — **there is no patched version to upgrade to.**
+
+**Why this repo isn't actually exposed right now:** `chromadb`'s vulnerable surface is its *server* API — reachable only if something starts a ChromaDB server and a client sends it a crafted request. `orchestrator.py` doesn't import `crewai` at all yet (§ First task, above); `crewai`/`chromadb` are reserved dependencies for a later phase, not in use. Even if they were, `crewai`'s default usage runs `chromadb` embedded (in-process), not as an exposed server. And even in the worst case, the firewall from Phase 3 (`scripts/02-firewall.sh`) only allows inbound `22/tcp` and `11434/tcp` — nothing would make a `chromadb` server reachable from the LAN without a deliberate, separate firewall change.
+
+**Fix anyway, rather than just accepting the risk:** `uv` supports forcing a transitive dependency to a different version than what the dependent package requests (`[tool.uv] override-dependencies`). Forced `chromadb` down to `0.6.3` — the last release before `1.0.0`, entirely outside the affected range — and verified `crewai` still imports cleanly against it:
+```toml
+[tool.uv]
+override-dependencies = ["chromadb<1.0.0"]
+```
+
+**Caveat for later:** this override has only been verified at *import* time. If a future phase actually exercises `crewai`'s memory/RAG features (which use `chromadb`'s API directly), re-verify that behavior still works correctly against the older `0.6.3` API surface — it changed significantly at the `1.0.0` boundary. If it doesn't, revisit: either accept the risk with `trust_remote_code` never set and no server ever exposed (both already true here), or wait for an upstream patch.
+
 Direct dependencies, exact versions captured from PyPI when this phase landed (`pip index versions <pkg>`):
 ```
 langgraph==1.2.7

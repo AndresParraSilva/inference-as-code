@@ -13,3 +13,10 @@ dependencies = [
     "duckdb==1.5.4",
     "chess==1.11.2",
 ]
+
+[tool.uv]
+# crewai pulls in chromadb>=1.0.0, every version of which (up to the current
+# latest, 1.5.9) has a critical unpatched pre-auth RCE (GHSA via Dependabot).
+# Force the last pre-1.0 release instead — outside the affected range, and
+# crewai still imports fine against it (verified). See docs/05-agentic-framework.md.
+override-dependencies = ["chromadb<1.0.0"]
