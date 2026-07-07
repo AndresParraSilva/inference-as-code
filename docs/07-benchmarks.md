@@ -49,4 +49,4 @@ uv run benchmark.py
 
 ## Checkpoint
 
-Pending — run on the box across all three pulled models, commit the resulting CSV, and add the Markdown table plus one honest interpretation paragraph to the README (per `constitution.md` §8: benchmark claims must be backed by committed data, one honest metric per public artifact).
+✅ Ran on the box across all three models (`bench/results/20260707-141012.csv`, full run under 3 minutes). Markdown summary and interpretation added to the README. Confirmed the "short" prompt's small output (3–5 tokens) makes its own tokens/sec figure statistically weak — noted as an explicit caveat rather than smoothed over.

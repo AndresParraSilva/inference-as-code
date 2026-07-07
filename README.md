@@ -58,6 +58,20 @@ See [`docs/scripts.md`](docs/scripts.md) for the general workflow (how scripts r
 
 More steps land here as each phase completes.
 
+## Benchmark results
+
+Measured on the box itself (`bench/benchmark.py`), CPU-only, three chess-flavored prompts per model (short/medium/long), capped at 200 generated tokens each — raw data in [`bench/results/20260707-141012.csv`](bench/results/20260707-141012.csv), methodology in [`docs/07-benchmarks.md`](docs/07-benchmarks.md).
+
+| Model | Quant | Tokens/sec | TTFT (s) | Peak RAM (MB) |
+|---|---|---|---|---|
+| qwen2.5:3b | Q4 | 9.6 | 3.74 | 2064 |
+| llama3.2:3b | Q4 | 9.9 | 4.01 | 2443 |
+| qwen2.5:7b-instruct-q4_K_M | Q4_K_M | 4.3 | 9.49 | 4828 |
+
+Both 3B models land in the same ballpark (~10 tok/s) and are clearly faster than the 7B model, which runs at roughly half the throughput — a fairly direct trade of size for speed on CPU-only hardware. TTFT here is an average across a cold model-load (the first prompt of each model's run, 7–19s depending on size) and two warm prompts (2–6s) — worth knowing that the *first* request after a model has been idle carries most of that latency, not a steady-state number. Peak RAM tracks model size closely (2.0–2.4GB for the 3B models, 4.8GB for 7B Q4_K_M), leaving comfortable headroom under the 8GB ceiling for the OS and agent tooling. Practical read: 3B is the better fit for anything latency-sensitive (an interactive chat loop); 7B is usable but feels sluggish for back-and-forth, better suited to batch/offline work.
+
+One honest caveat: the `short` prompt only produced 3–5 output tokens per model (a one-word move, as asked) — too small a sample for a statistically meaningful tokens/sec figure on its own; the numbers above are more representative of `medium`/`long`.
+
 ## Related
 
 - Chess analysis agent (LangGraph + local LLMs) — kept in this repo, in `chess-agent-lab/`, as a self-contained working example: infra plus a real application running on it.
