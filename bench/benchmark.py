@@ -112,12 +112,18 @@ def main() -> None:
 
     client = Client(host=args.host)
 
+    start = datetime.datetime.now()
     rows = []
     for model in args.models:
         for prompt_name, prompt in PROMPTS.items():
-            print(f"Running {model} / {prompt_name}...", file=sys.stderr)
+            now = datetime.datetime.now().strftime("%H:%M:%S")
+            print(f"[{now}] Running {model} / {prompt_name}...", file=sys.stderr)
             result = run_prompt(client, model, prompt)
             rows.append({"prompt_name": prompt_name, **result})
+
+    elapsed = (datetime.datetime.now() - start).total_seconds()
+    now = datetime.datetime.now().strftime("%H:%M:%S")
+    print(f"[{now}] Finished {len(rows)} runs in {elapsed:.1f}s", file=sys.stderr)
 
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
