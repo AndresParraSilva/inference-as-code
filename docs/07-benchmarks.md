@@ -11,13 +11,15 @@
 `bench/benchmark.py` runs a **fixed prompt set** against each pulled model and measures tokens/sec, time-to-first-token (TTFT), and peak RAM — real numbers on real constrained hardware, not spec-sheet claims.
 
 **Prompt set — chess-flavored, three lengths** (user's call, to keep this distinctive rather than a generic benchmark):
-- **short** — FEN + "what's the best move?", answer-only.
+- **short** — FEN + "what's the best move, and why in one sentence?"
 - **medium** — the same FEN-explain task `chess-agent-lab/agents/orchestrator.py` uses (explain the position, name the best move).
 - **long** — summarize a short PGN game in a paragraph.
 
 Three lengths exercise different generation-length behavior (a model can look fast on a one-word answer and slow on a paragraph, or vice versa).
 
-**Generation is capped at 200 tokens** (`num_predict`) per prompt, so total benchmark runtime stays bounded — especially important for the 7B model on CPU-only hardware, where an uncapped long-form response could take a very long time. 200 tokens is enough to get a stable tokens/sec sample without the run taking excessively long.
+**`short` originally asked for the move only** — that produced just 3–5 output tokens per model in the first real run, too small a sample for a trustworthy tokens/sec figure. Rephrased to also require a one-sentence justification, which reliably produces enough tokens to measure.
+
+**Generation is capped at 500 tokens** (`num_predict`) per prompt, so total benchmark runtime stays bounded — especially important for the 7B model on CPU-only hardware, where an uncapped long-form response could take a very long time. Raised from an initial 200-token cap once the first real run showed the full nine-call benchmark finishing in under 3 minutes — plenty of headroom to push generation length further and get a better read on sustained (not just burst) throughput.
 
 ## Metrics: sourced from Ollama's own API, not measured by hand
 

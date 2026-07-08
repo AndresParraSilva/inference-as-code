@@ -12,7 +12,7 @@ from ollama import Client
 
 RESULTS_DIR = Path(__file__).resolve().parent / "results"
 NS_PER_SEC = 1_000_000_000
-MAX_TOKENS = 200  # cap generation length so runtime stays bounded, esp. on the 7B model
+MAX_TOKENS = 500  # cap generation length so runtime stays bounded, esp. on the 7B model
 
 MODELS = [
     "qwen2.5:3b",
@@ -35,7 +35,8 @@ SAMPLE_PGN = (
 PROMPTS = {
     "short": (
         f"Given the FEN '{STARTING_FEN}', what is the best move? "
-        "Reply with only the move in algebraic notation."
+        "Reply with the move in algebraic notation and one sentence "
+        "justifying it."
     ),
     "medium": (
         f"Given this chess position in FEN notation: {STARTING_FEN}\n"
