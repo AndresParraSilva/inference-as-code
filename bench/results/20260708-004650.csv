@@ -1,0 +1,19 @@
+model,quant,prompt_name,tokens_per_sec,ttft_s,peak_ram_mb,total_duration_s,eval_count,prompt
+qwen2.5:3b,Q4,short,9.05,7.195,2063.9,14.273,64,"Given the FEN 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', what is the best move? Reply with the move in algebraic notation and one sentence justifying it."
+qwen2.5:3b,Q4,medium,8.91,1.731,2063.9,12.393,95,"Given this chess position in FEN notation: rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
+In two sentences, explain the position and name the single best move in standard algebraic notation."
+qwen2.5:3b,Q4,long,8.74,2.614,2063.9,26.754,211,"Here is a chess game in PGN notation:
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 4. Ba4 Nf6 5. O-O Be7 6. Re1 b5 7. Bb3 d6 8. c3 O-O 9. h3 Nb8 10. d4 Nbd7
+Summarize what happened in this game in a short paragraph, noting the opening played and any notable ideas."
+llama3.2:3b,Q4,short,8.82,7.31,2442.9,11.282,35,"Given the FEN 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', what is the best move? Reply with the move in algebraic notation and one sentence justifying it."
+llama3.2:3b,Q4,medium,8.53,1.811,2442.9,16.477,125,"Given this chess position in FEN notation: rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
+In two sentences, explain the position and name the single best move in standard algebraic notation."
+llama3.2:3b,Q4,long,8.46,2.571,2442.9,18.662,136,"Here is a chess game in PGN notation:
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 4. Ba4 Nf6 5. O-O Be7 6. Re1 b5 7. Bb3 d6 8. c3 O-O 9. h3 Nb8 10. d4 Nbd7
+Summarize what happened in this game in a short paragraph, noting the opening played and any notable ideas."
+qwen2.5:7b-instruct-q4_K_M,Q4_K_M,short,4.08,19.393,4828.0,29.025,39,"Given the FEN 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', what is the best move? Reply with the move in algebraic notation and one sentence justifying it."
+qwen2.5:7b-instruct-q4_K_M,Q4_K_M,medium,4.01,3.768,4828.0,19.486,63,"Given this chess position in FEN notation: rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
+In two sentences, explain the position and name the single best move in standard algebraic notation."
+qwen2.5:7b-instruct-q4_K_M,Q4_K_M,long,3.94,5.736,4828.0,45.596,157,"Here is a chess game in PGN notation:
+1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 4. Ba4 Nf6 5. O-O Be7 6. Re1 b5 7. Bb3 d6 8. c3 O-O 9. h3 Nb8 10. d4 Nbd7
+Summarize what happened in this game in a short paragraph, noting the opening played and any notable ideas."

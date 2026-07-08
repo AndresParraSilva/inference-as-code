@@ -51,4 +51,8 @@ uv run benchmark.py
 
 ## Checkpoint
 
-✅ Ran on the box across all three models (`bench/results/20260707-141012.csv`, full run under 3 minutes). Markdown summary and interpretation added to the README. Confirmed the "short" prompt's small output (3–5 tokens) makes its own tokens/sec figure statistically weak — noted as an explicit caveat rather than smoothed over.
+✅ Ran on the box across all three models, twice:
+- First run (`bench/results/20260707-141012.csv`): under 3 minutes, but flagged the `short` prompt's 3–5 token output as too small a sample.
+- Second run, after fixing `short` and raising the cap to 500 (`bench/results/20260708-004650.csv`): still under 3 minutes — no prompt came close to the cap (longest generation: 211 tokens) — with a proper sample size across all three prompt lengths. This is the run cited in the README.
+
+Both raw CSVs stay committed as a record of the benchmark's own iteration, not just the final numbers.
