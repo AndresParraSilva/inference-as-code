@@ -62,6 +62,8 @@ More steps land here as each phase completes.
 
 Measured on the box itself (`bench/benchmark.py`), CPU-only, three chess-flavored prompts per model (short/medium/long), capped at 500 generated tokens each — raw data in [`bench/results/20260708-004650.csv`](bench/results/20260708-004650.csv), methodology in [`docs/07-benchmarks.md`](docs/07-benchmarks.md).
 
+**Quant** = quantization level (bit-width the model's weights are compressed to — see [`docs/04-inference.md`](docs/04-inference.md) for why it matters on 8GB CPU-only hardware). **TTFT** = time-to-first-token, i.e. how long before the model starts responding.
+
 | Model | Quant | Tokens/sec | TTFT (s) | Peak RAM (MB) |
 |---|---|---|---|---|
 | qwen2.5:3b | Q4 | 8.9 | 3.85 | 2064 |
