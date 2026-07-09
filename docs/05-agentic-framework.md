@@ -21,7 +21,7 @@ Kept inside this repo (see `constitution.md` §2) rather than split into a secon
 
 **User's call** (non-delegable per `constitution.md` §10): given a FEN position, the local LLM explains the position and names its best move; Stockfish independently computes the objectively best move and evaluation; the loop compares them.
 
-**Why hand-rolled first, no framework:** the plan calls for seeing the raw act-observe-reason mechanics — a plain loop hitting Ollama's API directly and comparing against Stockfish — before introducing LangGraph. `pyproject.toml` already declares `langgraph`/`langchain`/`langchain-community`/`crewai` for when that's the next step, but `orchestrator.py` only imports `ollama` and `chess` for now.
+**Why hand-rolled first, no framework:** the plan calls for seeing the raw act-observe-reason mechanics — a plain loop hitting Ollama's API directly and comparing against Stockfish — before introducing LangGraph. `pyproject.toml` already declares `langgraph`/`langchain`/`langchain-community` for when that's the next step, but `orchestrator.py` only imports `ollama` and `chess` for now. (`crewai` was originally pinned here too — see the third gotcha below for why it was dropped.)
 
 ## Dependency management: uv
 
@@ -49,20 +49,35 @@ GitHub's Dependabot flagged a **critical** vulnerability on the pushed `uv.lock`
 
 **Why this repo isn't actually exposed right now:** `chromadb`'s vulnerable surface is its *server* API — reachable only if something starts a ChromaDB server and a client sends it a crafted request. `orchestrator.py` doesn't import `crewai` at all yet (§ First task, above); `crewai`/`chromadb` are reserved dependencies for a later phase, not in use. Even if they were, `crewai`'s default usage runs `chromadb` embedded (in-process), not as an exposed server. And even in the worst case, the firewall from Phase 3 (`scripts/02-firewall.sh`) only allows inbound `22/tcp` and `11434/tcp` — nothing would make a `chromadb` server reachable from the LAN without a deliberate, separate firewall change.
 
-**Fix anyway, rather than just accepting the risk:** `uv` supports forcing a transitive dependency to a different version than what the dependent package requests (`[tool.uv] override-dependencies`). Forced `chromadb` down to `0.6.3` — the last release before `1.0.0`, entirely outside the affected range — and verified `crewai` still imports cleanly against it:
+**Fix at the time, rather than just accepting the risk:** `uv` supports forcing a transitive dependency to a different version than what the dependent package requests (`[tool.uv] override-dependencies`). Forced `chromadb` down to `0.6.3` — the last release before `1.0.0`, entirely outside the affected range — and verified `crewai` still imports cleanly against it:
 ```toml
 [tool.uv]
 override-dependencies = ["chromadb<1.0.0"]
 ```
 
-**Caveat for later:** this override has only been verified at *import* time. If a future phase actually exercises `crewai`'s memory/RAG features (which use `chromadb`'s API directly), re-verify that behavior still works correctly against the older `0.6.3` API surface — it changed significantly at the `1.0.0` boundary. If it doesn't, revisit: either accept the risk with `trust_remote_code` never set and no server ever exposed (both already true here), or wait for an upstream patch.
+**Superseded:** this override is what caused the third gotcha below (a build failure for `chromadb<1.0.0`'s own C-extension dependency, `chroma-hnswlib`, on the box). `crewai` — and with it this whole override — was dropped rather than chased further. Left here as a record of what was tried, not current state.
 
-Direct dependencies, exact versions captured from PyPI when this phase landed (`pip index versions <pkg>`):
+## Gotcha: crewai dropped after a second real breakage
+
+After the Python-version fix and the CVE override above, `uv run python -m unittest discover tests` failed on the box (not locally) trying to *build* `chroma-hnswlib==0.7.6` — the C-extension dependency the downgraded `chromadb<1.0.0` pulls in:
+```
+RuntimeError: Unsupported compiler -- at least C++11 support is needed!
+```
+despite the build log showing the compiler successfully compiling both test snippets it tried (`-std=c++14` and `-std=c++11`) immediately beforehand.
+
+**Root cause:** no prebuilt wheel exists for `chroma-hnswlib==0.7.6` on Python 3.13 at all (confirmed against PyPI directly) — it must compile from source on every machine. Its `setup.py` is old, unmaintained `pybind11`-era code with a `cpp_flag()` compiler-detection routine that doesn't correctly interpret results from newer compilers; Ubuntu 26.04 ships a much newer `g++`/`clang` than that 2023-era detection code was written against. The compiler worked fine — the package's own bookkeeping about it didn't. This didn't surface locally, only on the box, because the box's compiler version differs.
+
+**Why not chase this further:** this is the *second* real breakage caused by the exact same unused dependency chain (`crewai` → `chromadb` → `chroma-hnswlib`) — first the Python 3.14 incompatibility, now this. `crewai` still isn't imported by any code. Patching a legacy build script, or pinning a specific system compiler version just to satisfy a dependency added purely for future use, isn't a good trade.
+
+**Fix:** drop `crewai` from `pyproject.toml` entirely (and with it, the now-moot `chromadb` override above). Re-add it later if a phase actually needs it — by then `chromadb` will likely have a genuinely patched release, resolving both this build issue and the CVE at once, rather than requiring another workaround.
+
+**Lesson:** pinning a framework "for later" isn't free even if unused — its transitive dependencies still have to resolve, build, and import correctly on the actual target machine. Two independent failures from one never-imported package is a signal to cut it, not patch around it a second time.
+
+Direct dependencies, exact versions captured from PyPI when this phase landed (`pip index versions <pkg>`), minus `crewai` per the gotcha above:
 ```
 langgraph==1.2.7
 langchain==1.3.11
 langchain-community==0.4.2
-crewai==1.15.1
 ollama==0.6.2
 duckdb==1.5.4
 chess==1.11.2

@@ -16,7 +16,7 @@ A public, reproducible IaC-style record of turning a Dell Latitude 5410 (8GB RAM
 | Service manager | systemd | units/overrides committed under `configs/` |
 | Inference | Ollama | LAN-exposed via `OLLAMA_HOST=0.0.0.0:11434` override |
 | Models | quantized 3B–7B (Qwen 2.5, Llama 3.2) | must fit 8GB RAM; quantization choice documented in `docs/04-inference.md` |
-| Agent layer | Python via `uv`: LangGraph, LangChain, CrewAI, `ollama`, DuckDB, `python-chess` | deps in `pyproject.toml`, exact resolved versions locked in `uv.lock` |
+| Agent layer | Python via `uv`: LangGraph, LangChain, `ollama`, DuckDB, `python-chess` | deps in `pyproject.toml`, exact resolved versions locked in `uv.lock`; CrewAI dropped, see `docs/05-agentic-framework.md` |
 | Benchmarks | `bench/benchmark.py` | CSV output in `bench/results/` + Markdown table in README |
 
 The chess agent application lives **inside this repo**, in `chess-agent-lab/` (see §3) — kept in-repo rather than split out, so the whole thing reads as one self-contained working example: infra plus a real application running on it.
