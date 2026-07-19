@@ -31,4 +31,4 @@ Outgoing traffic is allowed by default since the box needs to reach `apt` mirror
 
 ## Sanitization reminder
 
-Per `constitution.md` §6: no real LAN IPs, MAC addresses, or hostnames beyond generic examples in any committed file — this doc and all others use `192.168.x.x` placeholders.
+Per `AGENTS.md` §6: no real LAN IPs, MAC addresses, or hostnames beyond generic examples in any committed file — this doc and all others use `192.168.x.x` placeholders.

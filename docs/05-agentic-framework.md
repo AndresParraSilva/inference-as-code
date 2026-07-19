@@ -15,11 +15,11 @@ chess-agent-lab/
 └── README.md
 ```
 
-Kept inside this repo (see `constitution.md` §2) rather than split into a second repo, so the whole thing reads as one self-contained example: infra plus a real application running on it.
+Kept inside this repo (see `AGENTS.md` §2) rather than split into a second repo, so the whole thing reads as one self-contained example: infra plus a real application running on it.
 
 ## First task: FEN explain + Stockfish verify
 
-**User's call** (non-delegable per `constitution.md` §10): given a FEN position, the local LLM explains the position and names its best move; Stockfish independently computes the objectively best move and evaluation; the loop compares them.
+**User's call** (non-delegable per `AGENTS.md` §10): given a FEN position, the local LLM explains the position and names its best move; Stockfish independently computes the objectively best move and evaluation; the loop compares them.
 
 **Why hand-rolled first, no framework:** the plan calls for seeing the raw act-observe-reason mechanics — a plain loop hitting Ollama's API directly and comparing against Stockfish — before introducing LangGraph. `pyproject.toml` already declares `langgraph`/`langchain`/`langchain-community` for when that's the next step, but `orchestrator.py` only imports `ollama` and `chess` for now. (`crewai` was originally pinned here too — see the third gotcha below for why it was dropped.)
 

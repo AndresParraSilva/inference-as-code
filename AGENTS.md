@@ -1,4 +1,4 @@
-# Constitution — inference-as-code
+# AGENTS.md — inference-as-code
 
 Technical authority for this repository. Any AI assistant or contributor working here must follow these conventions in every change. The README is the human-facing introduction; this document governs how the work is actually done.
 
@@ -26,7 +26,7 @@ The chess agent application lives **inside this repo**, in `chess-agent-lab/` (s
 ```
 .
 ├── README.md            # human-facing reference architecture (see §8)
-├── constitution.md      # this file
+├── AGENTS.md      # this file
 ├── LICENSE              # MIT
 ├── .gitignore           # keys, data/, .env — see §6
 ├── docs/                # per-phase notes: 01-install, 02-network, 03-access, 04-inference, architecture

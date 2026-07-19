@@ -4,7 +4,7 @@ A decommissioned Dell Latitude 5410 turned into an EC2-style headless AI lab —
 
 **Goal:** turn the laptop into a headless "AI lab server" that behaves like an AWS EC2 instance — same mental model, same access pattern, same discipline — and document the entire process as a reproducible, public build log. Every script, config, and doc in this repo is committed as the work happens, not written up after the fact.
 
-The conventions that govern every change in this repo (stack, script standards, sanitization rules, git discipline) live in [constitution.md](constitution.md).
+The conventions that govern every change in this repo (stack, script standards, sanitization rules, git discipline) live in [AGENTS.md](AGENTS.md).
 
 ## AWS → Local Mental Model
 
@@ -34,7 +34,7 @@ The conventions that govern every change in this repo (stack, script standards, 
 ```
 .
 ├── README.md
-├── constitution.md # technical authority — conventions every change must follow
+├── AGENTS.md # technical authority — conventions every change must follow
 ├── LICENSE
 ├── docs/           # per-phase notes (install, network, access, inference, architecture)
 ├── scripts/        # numbered, idempotent, runnable in order

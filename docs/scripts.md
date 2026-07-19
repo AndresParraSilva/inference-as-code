@@ -1,6 +1,6 @@
 # Running the scripts
 
-`scripts/` holds every state-changing action taken on the `iac` box, numbered and meant to be run **in order** on a fresh install (see `constitution.md` §3–4 for the discipline behind this: script first, run second, commit third).
+`scripts/` holds every state-changing action taken on the `iac` box, numbered and meant to be run **in order** on a fresh install (see `AGENTS.md` §3–4 for the discipline behind this: script first, run second, commit third).
 
 ## General workflow
 
